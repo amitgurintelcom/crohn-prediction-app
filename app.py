@@ -82,7 +82,7 @@ with c1:
 
 with c2:
     api_key, conn_addr, conn_req = select_host(selected)
-    uploaded_file = st.file_uploader("", type="npy", key="1")
+    uploaded_file = st.file_uploader("", type="mpg", key="1")
     if uploaded_file is not None:
         content = uploaded_file.read()
         encoded_string = base64.b64encode(content).decode("utf-8")
@@ -123,5 +123,5 @@ with c2:
         st.metric(label=f'Gender', value=f"{gender}")
         st.metric(label=f'Gender Confidence', value=f"{prob_perc}%")
     else:
-        st.info(f"""👆 Please upload a .npy ECG file first""")
+        st.info(f"""👆 Please upload a .mpg Capsule Endoscopy video first""")
         st.stop()
