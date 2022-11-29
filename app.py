@@ -126,7 +126,7 @@ with c2:
         for i,image in enumerate(images):
             image_data = base64.b64decode(image) 
             image = Image.open(io.BytesIO(image_data))
-            st.image(images, width=200)
+            st.image(image, width=200)
         ###
         # Add images
     else:
