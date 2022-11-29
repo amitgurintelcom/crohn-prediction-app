@@ -8,6 +8,7 @@ mkdir -p ~/.streamlit/
 echo "\
 [server]\n\
 headless = true\n\
+maxUploadSize=1028\n\
 port = $PORT\n\
 enableCORS = false\n\
 \n\
