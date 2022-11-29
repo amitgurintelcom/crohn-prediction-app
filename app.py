@@ -116,7 +116,7 @@ with c2:
     if not is_exception_raised and output is not None:
         #print(output)
         #print("@@@ \n", json.loads(output))
-        prediction = int(json.loads(output)['prediction'][0])
+        prediction = float(json.loads(output)['prediction'][0])
         confidence = json.loads(output)['prediction'][1]
         if prediction==1:
             pred_str='Yes'
