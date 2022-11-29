@@ -88,10 +88,9 @@ with c2:
     uploaded_file = st.file_uploader("", type="mpg", key="1")
     if uploaded_file is not None:
         content = uploaded_file.read()
-        video_url="https://libhub-readme.s3.us-west-2.amazonaws.com/crohns-app-cvbock/video.mpeg"
         # encoded_string = base64.b64encode(content).decode("utf-8")
-        encoded_string = base64.b64encode(video_url).decode("utf-8")
-        request_dict =  {"video":encoded_string}
+        video_url="https://libhub-readme.s3.us-west-2.amazonaws.com/crohns-app-cvbock/video.mpeg"
+        request_dict =  {"video":video_url}
         payload = '{"input_params":' + json.dumps(request_dict) + "}"
         headers = {
             'Cnvrg-Api-Key': api_key,
