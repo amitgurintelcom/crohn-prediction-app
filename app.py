@@ -114,19 +114,20 @@ with c2:
                 output = None
 
     if not is_exception_raised and output is not None:
-        print(output)
+        #print(output)
         #print("@@@ \n", json.loads(output))
         prediction = json.loads(output)['prediction'][0]
+        print("prediction:", prediction)
         confidence = json.loads(output)['prediction'][1]
         images = json.loads(output)['prediction'][2]['images']
 
         ### Display results
         st.metric(label="prediction", value=f"{prediction}%")
         st.metric(label=f'confidence level', value=f"{confidence}%")
-        for i,image in enumerate(images):
-            image_data = base64.b64decode(image) 
-            image = Image.open(io.BytesIO(image_data))
-            st.image(image, width=200)
+        for i,image_1 in enumerate(images):
+            image_data = base64.b64decode(image_1) 
+            image_2 = Image.open(io.BytesIO(image_data))
+            st.image(image_2, width=200)
         ###
         # Add images
     else:
