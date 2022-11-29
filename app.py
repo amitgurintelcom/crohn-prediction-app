@@ -88,6 +88,7 @@ with c2:
     uploaded_file = st.file_uploader("", type="mpg", key="1")
     if uploaded_file is not None:
         content = uploaded_file.read()
+        st.video(content)
         # encoded_string = base64.b64encode(content).decode("utf-8")
         video_url="https://libhub-readme.s3.us-west-2.amazonaws.com/crohns-app-cvbock/video.mpeg"
         request_dict =  {"video":video_url}
@@ -134,7 +135,6 @@ with c2:
             image_data = base64.b64decode(image_1) 
             image_2 = Image.open(io.BytesIO(image_data))
             st.image(image_2, width=500)
-        st.video(content)
         ###
         # Add images
     else:
