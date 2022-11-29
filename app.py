@@ -120,15 +120,15 @@ with c2:
         confidence = json.loads(output)['prediction'][1]
         if prediction==1:
             pred_str='Yes'
-            conf_win= confidence[1]
+            conf_win= float(confidence[1])*100
         else:
             pred_str='No'
-            conf_win= confidence[0]
+            conf_win= float(confidence[0])*100
         print("prediction:", prediction)
         images = json.loads(output)['prediction'][2]['images']
 
         ### Display results
-        st.metric(label="Diseases Prediction:", value=f"{pred_str}%")
+        st.metric(label="Diseases Prediction:", value=f"{pred_str}")
         st.metric(label=f'confidence level', value=f"{conf_win}%")
         for i,image_1 in enumerate(images):
             image_data = base64.b64decode(image_1) 
