@@ -89,7 +89,7 @@ with c2:
     uploaded_file = st.file_uploader("", type="mpg", key="1")
     if uploaded_file is not None:
         content = uploaded_file.read()
-        video_rd = cv2.VideoCapture(uploaded_file)
+        video_rd = cv2.VideoCapture(content)
         st.video(video_rd)
         # encoded_string = base64.b64encode(content).decode("utf-8")
         video_url="https://libhub-readme.s3.us-west-2.amazonaws.com/crohns-app-cvbock/video.mpeg"
