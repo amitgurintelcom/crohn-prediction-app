@@ -16,3 +16,5 @@ textColor = '#fff'
 # Accepted values (serif | sans serif | monospace) 
 # Default: "sans serif"
 font = "sans serif"
+[browser]
+gatherUsageStats = false
