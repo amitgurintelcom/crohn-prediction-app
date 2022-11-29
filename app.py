@@ -113,6 +113,8 @@ with c2:
                 output = None
 
     if not is_exception_raised and output is not None:
+        print(output)
+        print("@@@ \n", json.loads(output))
         prediction = json.loads(output)['prediction'][0]
         confidence = json.loads(output)['prediction'][1]
         images = json.loads(output)['prediction'][2]['images']
