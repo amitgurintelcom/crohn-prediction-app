@@ -13,7 +13,6 @@ from st_aggrid.shared import JsCode
 ###################################
 from PIL import Image
 import io
-import cv2
 
 is_exception_raised = False
 output = None
