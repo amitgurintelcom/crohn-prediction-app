@@ -10,6 +10,9 @@ from st_aggrid import AgGrid
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from st_aggrid.shared import JsCode
 ###################################
+from PIL import Image
+import io
+
 is_exception_raised = False
 output = None
 
@@ -114,8 +117,13 @@ with c2:
         confidence = json.loads(output)['prediction'][1]
         images = json.loads(output)['prediction'][2]['images']
 
+        ### Display results
         st.metric(label="prediction", value=f"{prediction}%")
         st.metric(label=f'confidence level', value=f"{confidence}%")
+        for i,image in enumerate(images):
+            image_data = base64.b64decode(image) 
+            image = Image.open(io.BytesIO(image_data))
+            st.image(images, width=200)
         ###
         # Add images
     else:
