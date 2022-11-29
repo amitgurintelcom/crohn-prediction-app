@@ -58,7 +58,7 @@ st.set_page_config(page_icon="✂️", page_title="Crohn's Treatment Outcome Pre
 with st.sidebar:
         selected = option_menu(
             menu_title="Choose web host",  # required
-            options=["AWS (Future)", "Intel DevCloud", "Azure (Future)"],  # required
+            options=["Intel DevCloud", "AWS (Future)", "Azure (Future)"],  # required
             icons=["snow2", "bank2", "microsoft"],  # optional
             menu_icon="heart-pulse",  # optional
             default_index=0,  # optional
