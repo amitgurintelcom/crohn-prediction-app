@@ -5,6 +5,7 @@ import base64
 import json
 import re
 import os
+import cv2
 ###################################
 from st_aggrid import AgGrid
 from st_aggrid.grid_options_builder import GridOptionsBuilder
@@ -12,6 +13,7 @@ from st_aggrid.shared import JsCode
 ###################################
 from PIL import Image
 import io
+import cv2
 
 is_exception_raised = False
 output = None
@@ -88,7 +90,8 @@ with c2:
     uploaded_file = st.file_uploader("", type="mpg", key="1")
     if uploaded_file is not None:
         content = uploaded_file.read()
-        st.video(content,  format='video/mpg')
+        video_rd = cv2.VideoCapture(uploaded_file)
+        st.video(video_rd)
         # encoded_string = base64.b64encode(content).decode("utf-8")
         video_url="https://libhub-readme.s3.us-west-2.amazonaws.com/crohns-app-cvbock/video.mpeg"
         request_dict =  {"video":video_url}
