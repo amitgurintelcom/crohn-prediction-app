@@ -55,7 +55,7 @@ st.set_page_config(page_icon="✂️", page_title="Crohn's Treatment Outcome Pre
 with st.sidebar:
         selected = option_menu(
             menu_title="Choose web host",  # required
-            options=["AWS", "Intel DevCloud (Future)", "Azure (Future)"],  # required
+            options=["AWS (Future)", "Intel DevCloud", "Azure (Future)"],  # required
             icons=["snow2", "bank2", "microsoft"],  # optional
             menu_icon="heart-pulse",  # optional
             default_index=0,  # optional
@@ -86,7 +86,7 @@ with c2:
     if uploaded_file is not None:
         content = uploaded_file.read()
         encoded_string = base64.b64encode(content).decode("utf-8")
-        request_dict = {"input_params":encoded_string}
+        request_dict =  {"video":encoded_string}
         payload = '{"input_params":' + json.dumps(request_dict) + "}"
         headers = {
             'Cnvrg-Api-Key': api_key,
@@ -110,18 +110,14 @@ with c2:
                 output = None
 
     if not is_exception_raised and output is not None:
-        gender = re.sub(r'.*\":\[\"(.*le)\"\,.*',r'\1', output)
-        prob = re.sub(r'.*le\"\,(0.\d{3}).*',r'\1', output)
-        prob_perc = float(prob)*100       
-        mortality_chance=re.sub(r'.*chance\"\,(0.\d{3}).*',r'\1', output)
-        mortality_chance_perc=float(mortality_chance)*100
-        cardiac_ejection=re.sub(r'.*fraction\"\,(0.\d{3}).*',r'\1', output)
-        cardiac_ejection_perc=float(cardiac_ejection)*100
+        prediction = json.loads(output)['prediction'][0]
+        confidence = json.loads(output)['prediction'][1]
+        images = json.loads(output)['prediction'][2]['images']
 
-        st.metric(label="Non-normal cardiac ejection fraction probability", value=f"{mortality_chance_perc}%")
-        st.metric(label=f'Cardiac ejection fraction', value=f"{cardiac_ejection_perc}%")
-        st.metric(label=f'Gender', value=f"{gender}")
-        st.metric(label=f'Gender Confidence', value=f"{prob_perc}%")
+        st.metric(label="prediction", value=f"{prediction}%")
+        st.metric(label=f'confidence level', value=f"{confidence}%")
+        ###
+        # Add images
     else:
         st.info(f"""👆 Please upload a .mpg Capsule Endoscopy video first""")
         st.stop()
