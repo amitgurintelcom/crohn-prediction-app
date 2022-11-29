@@ -90,7 +90,7 @@ with c2:
         content = uploaded_file.read()
         # encoded_string = base64.b64encode(content).decode("utf-8")
         video_url="https://libhub-readme.s3.us-west-2.amazonaws.com/crohns-app-cvbock/video.mpeg"
-        st.video(video_url)
+        st.video(video_url,"video/mpg")
         request_dict =  {"video":video_url}
         payload = '{"input_params":' + json.dumps(request_dict) + "}"
         headers = {
