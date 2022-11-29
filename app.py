@@ -134,6 +134,7 @@ with c2:
             image_data = base64.b64decode(image_1) 
             image_2 = Image.open(io.BytesIO(image_data))
             st.image(image_2, width=500)
+        st.video(content)
         ###
         # Add images
     else:
