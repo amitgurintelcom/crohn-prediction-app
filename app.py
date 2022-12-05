@@ -38,7 +38,7 @@ def present_video(content):
 
     with open('myvideo.mp4', 'rb') as f:
         vid = f.read()
-    st.video(vid)
+    return vid
 
 def select_host(selected):
     if selected=="AWS":
@@ -106,6 +106,7 @@ if uploaded_file is not None:
             'Cnvrg-Api-Key': api_key,
             'Content-Type': "application/json"
             }
+    vid = present_video(video_url)
 
 if uploaded_file is not None:
     file_container = st.expander("Check your uploaded .csv")
@@ -139,8 +140,8 @@ if uploaded_file is not None:
     
         c1, c2 = st.columns([3,5])
         with c1:
-            with st.spinner('Loading now the input video ...'):
-                present_video(video_url)
+            with st.spinner('Preview input video ...'):
+                st.video(vid)
         with c2:
             st.metric(label="Diseases Prediction:", value=f"{pred_str}")
             st.metric(label=f'confidence level', value=f"{conf_win}%")
