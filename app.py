@@ -147,7 +147,7 @@ if uploaded_file is not None:
                 with st.spinner('Preview input video ...'):
                     st.video(vid)
         with c2:
-            st.metric(label="Diseases Prediction:", value=f"{pred_str}")
+            st.metric(label="Diseases treatment success Prediction:", value=f"{pred_str}")
             st.metric(label=f'confidence level', value=f"{conf_win}%")
             for i,image_1 in enumerate(images):
                 image_data = base64.b64decode(image_1) 
