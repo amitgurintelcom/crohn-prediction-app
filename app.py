@@ -31,14 +31,17 @@ def _max_width_():
     )
 
 def present_video(content):
-    if not os.path.exists("myvideo.mp4"):
-        videoClip = VideoFileClip(content).subclip(0,60)
-        clip_resized = videoClip.resize(height=360)
-        clip_resized.write_videofile("myvideo.mp4", fps=25)
+    try:
+        if not os.path.exists("myvideo.mp4"):
+            videoClip = VideoFileClip(content).subclip(0,60)
+            clip_resized = videoClip.resize(height=360)
+            clip_resized.write_videofile("myvideo.mp4", fps=25)
 
-    with open('myvideo.mp4', 'rb') as f:
-        vid = f.read()
-    return vid
+        with open('myvideo.mp4', 'rb') as f:
+            vid = f.read()
+        return vid
+    except:
+        return None 
 
 def select_host(selected):
     if selected=="AWS":
@@ -140,8 +143,9 @@ if uploaded_file is not None:
     
         c1, c2 = st.columns([3,5])
         with c1:
-            with st.spinner('Preview input video ...'):
-                st.video(vid)
+            if vid:
+                with st.spinner('Preview input video ...'):
+                    st.video(vid)
         with c2:
             st.metric(label="Diseases Prediction:", value=f"{pred_str}")
             st.metric(label=f'confidence level', value=f"{conf_win}%")
