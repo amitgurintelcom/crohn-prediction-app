@@ -17,6 +17,7 @@ import io
 is_exception_raised = False
 output = None
 
+
 def _max_width_():
     max_width_str = f"max-width: 1800px;"
     st.markdown(
@@ -29,6 +30,7 @@ def _max_width_():
     """,
         unsafe_allow_html=True,
     )
+
 
 def present_video(content):
     try:
@@ -43,65 +45,19 @@ def present_video(content):
     except:
         return None 
 
-def select_host(selected):
-    if selected=="AWS":
-        api_key=os.getenv('api_key_aws')
-        conn_addr=os.getenv('conn_addr_aws')
-        conn_req=os.getenv('conn_req_aws')
-        # api_key="dm32GHs3S9eojhMm5SsV9FbG"
-        # conn_addr="gastro-web-4-1.am22ensuxenodo5ihblszm8.cloud.cnvrg.io"
-        # conn_req="/api/v1/endpoints/cukczelw3sytfuga7byy"
-    elif selected=="Intel DevCloud":
-        api_key=os.getenv('api_key_intel')
-        conn_addr=os.getenv('conn_addr_intel')
-        conn_req=os.getenv('conn_req_intel')        
-        # api_key="WeaN8QbbKmhWZHJryoJzuUM1"
-        # conn_addr="ecg-web-dev-cloud-1.aaorm9bej4xwhihmdknjw5e.cloud.cnvrg.io"
-        # conn_req="/api/v1/endpoints/q6wmgijl7mqesrqneoau"
-    else:
-        api_key=os.getenv('api_key_aws')
-        conn_addr=os.getenv('conn_addr_aws')
-        conn_req=os.getenv('conn_req_aws')
-        # api_key="dm32GHs3S9eojhMm5SsV9FbG"
-        # conn_addr="gastro-web-4-1.am22ensuxenodo5ihblszm8.cloud.cnvrg.io"
-        # conn_req="/api/v1/endpoints/cukczelw3sytfuga7byy"
-    return api_key, conn_addr, conn_req
-    
-st.set_page_config(page_icon="✂️", page_title="Crohn's Treatment Outcome Prediction", layout="wide")
 
-with st.sidebar:
-        st.image('./intel.png', width=90)
-        st.subheader('Developer Cloud')
-        st.image("footer.png")
-        st.write("")
-        st.write("")
-        selected = option_menu(
-            menu_title="Choose web host",  # required
-            options=["Intel DevCloud", "AWS (Future)", "Azure (Future)"],  # required
-            icons=["snow2", "bank2", "microsoft"],  # optional
-            menu_icon="heart-pulse",  # optional
-            default_index=0,  # optional
-                )
-        st.info(f'web host is {selected}', icon="ℹ️")
+def send_request(video, conn_req, conn_addr, api_key):
+    video_url="https://libhub-readme.s3.us-west-2.amazonaws.com/crohns-app-cvbock/video.mpeg"
+    request_dict =  {"video":video} # {"video":video_url}
+    payload = '{"input_params":' + json.dumps(request_dict) + "}"
+    headers = {
+            'Cnvrg-Api-Key': api_key,
+            'Content-Type': "application/json"
+            }
+    send_to_endpoint(payload, headers, conn_req, conn_addr)
 
 
-st.title("Crohn's Treatment Outcome Prediction")
-c1, c2 = st.columns([1,5])
-with c1:
-    st.image('CE_basic.jpg', width=200)
-with c2:
-    st.write('''
-        Capsule endoscopy (CE) is a prime modality for diagnosing and monitoring Crohn's disease (CD). 
-        However, CE's video wasn't utilized for predicting the success of biologic therapy.
-        This demo runs the Timesformer model trained on Sheba data by Intel's New AI technologies group.
-        The model reaches a 20% improvement over the best existing biomarker (fecal calprotectin) while providing decision explainability and confidence level
-        ''')
-
-api_key, conn_addr, conn_req = select_host(selected)
-uploaded_file = st.file_uploader("", type="mpg", key="1")
-if uploaded_file is not None:
-    content = uploaded_file.read()
-    encoded_string = base64.b64encode(content).decode("utf-8")
+def send_pre_defined(conn_req, conn_addr, api_key):
     video_url="https://libhub-readme.s3.us-west-2.amazonaws.com/crohns-app-cvbock/video.mpeg"
     request_dict =  {"video":''} # {"video":video_url}
     payload = '{"input_params":' + json.dumps(request_dict) + "}"
@@ -109,10 +65,10 @@ if uploaded_file is not None:
             'Cnvrg-Api-Key': api_key,
             'Content-Type': "application/json"
             }
-    vid = present_video(video_url)
+    send_to_endpoint(payload, headers, conn_req, conn_addr)
 
-if uploaded_file is not None:
-    file_container = st.expander("Check your uploaded .csv")
+
+def send_to_endpoint(payload, headers, conn_req, conn_addr):
     with st.spinner('This might take few seconds ... '):
         try:
             conn = http.client.HTTPSConnection(conn_addr)
@@ -122,7 +78,7 @@ if uploaded_file is not None:
             res = conn.getresponse()
             data = res.read()
             output = data.decode("utf-8")
-        except: 
+        except:
             st.error('Cant connect to server. Try to disable VPN!')
             is_exception_raised = True
             output = None
@@ -155,4 +111,79 @@ if uploaded_file is not None:
                 st.image(image_2, width=500)
     else:
         st.info(f"""👆 Please upload a .mpg Capsule Endoscopy video first""")
-        st.stop()
+
+
+def select_host(selected):
+    if selected=="AWS":
+        api_key=os.getenv('api_key_aws')
+        conn_addr=os.getenv('conn_addr_aws')
+        conn_req=os.getenv('conn_req_aws')
+        # api_key="dm32GHs3S9eojhMm5SsV9FbG"
+        # conn_addr="gastro-web-4-1.am22ensuxenodo5ihblszm8.cloud.cnvrg.io"
+        # conn_req="/api/v1/endpoints/cukczelw3sytfuga7byy"
+    elif selected=="Intel DevCloud":
+        api_key=os.getenv('api_key_intel')
+        conn_addr=os.getenv('conn_addr_intel')
+        conn_req=os.getenv('conn_req_intel')        
+        # api_key="WeaN8QbbKmhWZHJryoJzuUM1"
+        # conn_addr="ecg-web-dev-cloud-1.aaorm9bej4xwhihmdknjw5e.cloud.cnvrg.io"
+        # conn_req="/api/v1/endpoints/q6wmgijl7mqesrqneoau"
+    else:
+        api_key=os.getenv('api_key_aws')
+        conn_addr=os.getenv('conn_addr_aws')
+        conn_req=os.getenv('conn_req_aws')
+        # api_key="dm32GHs3S9eojhMm5SsV9FbG"
+        # conn_addr="gastro-web-4-1.am22ensuxenodo5ihblszm8.cloud.cnvrg.io"
+        # conn_req="/api/v1/endpoints/cukczelw3sytfuga7byy"
+    return api_key, conn_addr, conn_req
+
+
+st.set_page_config(page_icon="✂️", page_title="Crohn's Treatment Outcome Prediction", layout="wide")
+
+with st.sidebar:
+        st.image('./intel.png', width=90)
+        st.subheader('Developer Cloud')
+        st.image("footer.png")
+        st.write("")
+        st.write("")
+        selected = option_menu(
+            menu_title="Choose web host",  # required
+            options=["Intel DevCloud", "AWS (Future)", "Azure (Future)"],  # required
+            icons=["snow2", "bank2", "microsoft"],  # optional
+            menu_icon="heart-pulse",  # optional
+            default_index=0,  # optional
+                )
+        st.info(f'web host is {selected}', icon="ℹ️")
+
+
+st.title("Crohn's Treatment Outcome Prediction")
+c1, _, c2 = st.columns([1,1,5])
+with c1:
+    st.image('CE_basic.jpg', width=200)
+with c2:
+    st.write('''
+        Capsule endoscopy (CE) is a prime modality for diagnosing and monitoring Crohn's disease (CD). 
+        However, CE's video wasn't utilized for predicting the success of biologic therapy.
+        This demo runs the Timesformer model trained on Sheba data by Intel's New AI technologies group.
+        The model reaches a 20% improvement over the best existing biomarker (fecal calprotectin) while providing decision explainability and confidence level
+        ''')
+
+api_key, conn_addr, conn_req = select_host(selected)
+
+pre_defined_video_demo, upload_your_own = st.tabs(["Run Example", "Upload Your Own"])
+
+with pre_defined_video_demo:
+    send_pre_defined(conn_req, conn_addr, api_key)
+
+with upload_your_own:
+    print('in upload your own')
+    uploaded_file = st.file_uploader("", type="mpg", key="1")
+    if uploaded_file is not None:
+        content = uploaded_file.read()
+        encoded_string = base64.b64encode(content).decode("utf-8")
+        send_request(encoded_string, conn_req, conn_addr, api_key)
+        #vid = present_video(video_url)
+        file_container = st.expander("Check your uploaded .csv")
+
+
+        
