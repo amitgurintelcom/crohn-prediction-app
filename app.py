@@ -14,9 +14,6 @@ from moviepy.editor import VideoFileClip
 from PIL import Image
 import io
 
-is_exception_raised = False
-output = None
-
 
 def _max_width_():
     max_width_str = f"max-width: 1800px;"
@@ -69,6 +66,8 @@ def send_pre_defined(conn_req, conn_addr, api_key):
 
 
 def send_to_endpoint(payload, headers, conn_req, conn_addr):
+    is_exception_raised = False
+    output = None
     with st.spinner('This might take few seconds ... '):
         try:
             conn = http.client.HTTPSConnection(conn_addr)
