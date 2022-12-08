@@ -28,6 +28,14 @@ def _max_width_():
         unsafe_allow_html=True,
     )
 
+def load_pre_defined_video():
+    try:
+        if os.path.exists("myvideo.mp4"):
+            with open('myvideo.mp4', 'rb') as f:
+                vid = f.read()
+            return vid
+    except:
+        return None
 
 def present_video(content):
     try:
@@ -51,7 +59,8 @@ def send_request(video, conn_req, conn_addr, api_key):
             'Cnvrg-Api-Key': api_key,
             'Content-Type': "application/json"
             }
-    send_to_endpoint(payload, headers, conn_req, conn_addr)
+    vid = present_video(video)
+    send_to_endpoint(payload, headers, conn_req, conn_addr, vid=vid)
 
 
 def send_pre_defined(conn_req, conn_addr, api_key):
@@ -62,10 +71,11 @@ def send_pre_defined(conn_req, conn_addr, api_key):
             'Cnvrg-Api-Key': api_key,
             'Content-Type': "application/json"
             }
+    vid = load_pre_defined_video()
     send_to_endpoint(payload, headers, conn_req, conn_addr)
 
 
-def send_to_endpoint(payload, headers, conn_req, conn_addr):
+def send_to_endpoint(payload, headers, conn_req, conn_addr, vid=None):
     is_exception_raised = False
     output = None
     with st.spinner('This might take few seconds ... '):
@@ -181,8 +191,6 @@ with upload_your_own:
         content = uploaded_file.read()
         encoded_string = base64.b64encode(content).decode("utf-8")
         send_request(encoded_string, conn_req, conn_addr, api_key)
-        #vid = present_video(video_url)
-        file_container = st.expander("Check your uploaded .csv")
 
 
         
